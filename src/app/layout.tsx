@@ -3,6 +3,7 @@ import '~/styles/globals.css'
 import { Inter } from 'next/font/google'
 import { Toaster } from '~/components/ui/sonner'
 import { Button } from '~/components/ui/button'
+import Link from 'next/link'
 
 const inter = Inter({
     subsets: ['latin'],
@@ -35,9 +36,13 @@ export default function RootLayout({
 
 function Topnav() {
     return (
-        <header className='sticky top-0 flex h-16 items-center justify-between gap-4 border-b bg-background px-4 md:px-6'>
-            <h1 className='text-xl font-bold'>Schriftzug</h1>
-            <Button variant='ghost'>Login</Button>
+        <header className='sticky top-0 h-16 border-b bg-background'>
+            <div className='container flex h-full items-center justify-between gap-4'>
+                <h1 className='text-xl font-bold underline'>
+                    <Link href='/'>Schriftzug</Link>
+                </h1>
+                <Button variant='ghost'>Login</Button>
+            </div>
         </header>
     )
 }
