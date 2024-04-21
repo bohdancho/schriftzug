@@ -1,8 +1,9 @@
 import Image from 'next/image'
-import { db } from '~/server/db'
+import Link from 'next/link'
+import { getAllPacks } from '~/server/queries'
 
-export default async function HomePage() {
-    const packs = await db.query.pack.findMany()
+export default async function PackSelectionPage() {
+    const packs = await getAllPacks()
 
     return (
         <main className='container flex flex-col gap-6 py-4 text-2xl'>
@@ -11,7 +12,8 @@ export default async function HomePage() {
             </h2>
             <div className='grid grid-cols-[repeat(auto-fill,minmax(min(180px,40%),1fr))] gap-4'>
                 {packs.map((pack) => (
-                    <div
+                    <Link
+                        href={`/play/${pack.id}`}
                         key={pack.name}
                         className='flex cursor-pointer flex-col items-center overflow-clip rounded-md border-2 shadow-md'
                     >
@@ -28,7 +30,7 @@ export default async function HomePage() {
                         />
 
                         <h3 className='p-2 lg:p-4'>{pack.name}</h3>
-                    </div>
+                    </Link>
                 ))}
             </div>
         </main>
