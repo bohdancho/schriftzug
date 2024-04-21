@@ -1,16 +1,9 @@
-'use client'
-
 import { Undo2 } from 'lucide-react'
 import Link from 'next/link'
 import { Button } from '~/components/ui/button'
 import { Card, CardHeader, CardTitle, CardDescription, CardFooter } from '~/components/ui/card'
-import { type Pack } from '~/server/db/schema'
 
-export function Game({ pack: _pack }: { pack: Pack }) {
-    return <StartScreen />
-}
-
-function StartScreen() {
+export function StartScreen({ onStart }: { onStart: () => void }) {
     return (
         <div className='container flex flex-1 items-center justify-center'>
             <Card className='w-[fit-content]'>
@@ -24,7 +17,7 @@ function StartScreen() {
                     </CardDescription>
                 </CardHeader>
                 <CardFooter className='justify-center gap-2'>
-                    <Button className='gap-2' onClick={() => alert('start')}>
+                    <Button className='gap-2' onClick={onStart}>
                         START
                     </Button>
                     <Button variant='destructive' size='icon' asChild>

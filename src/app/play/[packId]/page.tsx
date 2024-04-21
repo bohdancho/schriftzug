@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation'
 import { getPackById } from '~/server/queries'
-import { Game } from './_components/game'
+import { Game } from './_components'
 
 export default async function PlayPackPage({ params: { packId } }: { params: { packId: string } }) {
     const pack = await getPackById(+packId)
