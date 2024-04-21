@@ -38,9 +38,9 @@ function Topnav() {
     return (
         <header className='sticky top-0 h-16 border-b bg-background'>
             <div className='container flex h-full items-center justify-between gap-4'>
-                <h1 className='text-xl font-bold underline'>
-                    <Link href='/'>Schriftzug</Link>
-                </h1>
+                <Link className='text-xl font-bold underline' href='/'>
+                    Schriftzug
+                </Link>
                 <Button variant='ghost'>Login</Button>
             </div>
         </header>

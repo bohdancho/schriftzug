@@ -7,3 +7,5 @@ export const pack = createTable('pack', {
     name: varchar('name', { length: 256 }).notNull(),
     imgUrl: varchar('img_url', { length: 256 }).notNull(),
 })
+
+export type Pack = typeof pack.$inferSelect
