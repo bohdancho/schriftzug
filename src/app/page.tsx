@@ -1,12 +1,15 @@
 import Image from 'next/image'
+import { db } from '~/server/db'
 
-export default function HomePage() {
+export default async function HomePage() {
+    const packs = await db.query.pack.findMany()
     return (
         <main className='container flex flex-col gap-6 py-4 text-2xl'>
             <h2 className='text-2xl font-semibold leading-none tracking-tight md:text-4xl'>
                 Choose a word pack:
             </h2>
             <div className='grid grid-cols-[repeat(auto-fill,minmax(min(180px,40%),1fr))] gap-4'>
+                {packs.map((pack) => pack.name)}
                 {mockWordPacks.map((pack) => (
                     <div
                         key={pack.category}
