@@ -10,6 +10,7 @@ export const env = createEnv({
         POSTGRES_URL: z.string().url(),
         NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
         LLM_API_KEY: z.string(),
+        CLERK_SECRET_KEY: z.string(),
     },
 
     /**
@@ -19,6 +20,7 @@ export const env = createEnv({
      */
     client: {
         NEXT_PUBLIC_ENV: z.enum(['development', 'test', 'production']).default('development'),
+        NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string(),
     },
 
     /**
@@ -30,6 +32,8 @@ export const env = createEnv({
         NODE_ENV: process.env.NODE_ENV,
         LLM_API_KEY: process.env.LLM_API_KEY,
         NEXT_PUBLIC_ENV: process.env.NEXT_PUBLIC_ENV,
+        NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
+        CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY,
     },
     /**
      * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

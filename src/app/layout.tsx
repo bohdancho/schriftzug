@@ -1,5 +1,6 @@
 import '~/styles/globals.css'
 
+import { ClerkProvider, SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
 import { Inter } from 'next/font/google'
 import { Toaster } from '~/components/ui/sonner'
 import { Button } from '~/components/ui/button'
@@ -18,15 +19,17 @@ export const metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
-        <html lang='en'>
-            <body className={`font-sans ${inter.variable} dark`}>
-                <div className='grid min-h-screen grid-rows-[auto,1fr]'>
-                    <Topnav />
-                    {children}
-                </div>
-                <Toaster />
-            </body>
-        </html>
+        <ClerkProvider>
+            <html lang='en'>
+                <body className={`font-sans ${inter.variable} dark`}>
+                    <div className='grid min-h-screen grid-rows-[auto,1fr]'>
+                        <Topnav />
+                        {children}
+                    </div>
+                    <Toaster />
+                </body>
+            </html>
+        </ClerkProvider>
     )
 }
 
@@ -37,7 +40,13 @@ function Topnav() {
                 <Link className='text-xl font-bold underline' href='/'>
                     Schriftzug
                 </Link>
-                <Button variant='ghost'>Login</Button>
+
+                <SignedOut>
+                    <SignInButton />
+                </SignedOut>
+                <SignedIn>
+                    <UserButton />
+                </SignedIn>
             </div>
         </header>
     )
