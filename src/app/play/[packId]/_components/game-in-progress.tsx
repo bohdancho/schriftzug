@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { Button } from '~/components/ui/button'
 import { env } from '~/env'
 
-const DEFAULT_GAME_DURATION = env.NEXT_PUBLIC_ENV === 'development' ? 999999999 : 60
+const DEFAULT_GAME_DURATION = env.NEXT_PUBLIC_ENV === 'development' ? 5 : 60
 export function GameInProgress({ pack, onEnd }: { pack: Pack; onEnd: (result: GameResult) => void }) {
     const [currentWordIdx, setCurrentWordIdx] = useState(0)
     const [result, setResult] = useState<boolean[]>([])
@@ -29,13 +29,17 @@ export function GameInProgress({ pack, onEnd }: { pack: Pack; onEnd: (result: Ga
                 <div className='absolute z-10 w-full rounded-b-xl border-b border-primary-foreground bg-black/70 pb-8 pt-6 text-center text-5xl'>
                     {pack.words[currentWordIdx]}
                 </div>
-                <Button className='h-full text-5xl' onClick={() => handleTurn(false)}>
+                <Button className='h-full text-4xl md:text-5xl' onClick={() => handleTurn(false)} variant='destructive'>
                     Skip
                 </Button>
-                <Button className='h-full text-5xl' onClick={() => handleTurn(true)} variant='destructive'>
+                <Button className='h-full text-4xl md:text-5xl' onClick={() => handleTurn(true)}>
                     Guessed
                 </Button>
-                <Timer onTimeout={handleTimeout} duration={DEFAULT_GAME_DURATION} className='absolute z-10' />
+                <Timer
+                    onTimeout={handleTimeout}
+                    duration={DEFAULT_GAME_DURATION}
+                    className='pointer-events-none absolute bottom-4 left-1/2 z-10 -translate-x-1/2 font-mono text-5xl'
+                />
             </div>
         </div>
     )
@@ -57,5 +61,15 @@ function Timer({ duration, onTimeout, className }: { duration: number; onTimeout
         return () => clearInterval(interval)
     }, [timeLeft, onTimeout])
 
-    return <div className={className}>{timeLeft}</div>
+    return <div className={className}>{formatTime(timeLeft)}</div>
+}
+
+function formatTime(time: number) {
+    const minutes = Math.floor(time / 60)
+    const seconds = time % 60
+
+    const minutesString = minutes.toString().padStart(2, '0')
+    const secondsString = seconds.toString().padStart(2, '0')
+
+    return `${minutesString}:${secondsString}`
 }
