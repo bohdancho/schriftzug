@@ -1,11 +1,13 @@
 import Link from 'next/link'
+import { toast } from 'sonner'
 import { Button } from '~/components/ui/button'
 import { Input } from '~/components/ui/input'
-import { generatePackWords } from '~/server/llm'
 import { createPack, getAllPacks } from '~/server/queries'
+import { currentUser } from '@clerk/nextjs/server'
 
 export default async function PackSelectionPage() {
     const packs = await getAllPacks()
+    const user = await currentUser()
 
     return (
         <main className='container flex flex-col gap-6 py-4 text-2xl'>
@@ -21,19 +23,21 @@ export default async function PackSelectionPage() {
                     </Link>
                 ))}
             </div>
-            <div>
+
+            {user?.privateMetadata.isAdmin ? (
                 <form
-                    action={async () => {
+                    action={async (formData: FormData) => {
                         'use server'
 
-                        await createPack('Migranten in Deutschland')
+                        const packName = formData.get('packName') as string
+                        await createPack(packName)
                     }}
                     className='flex gap-4'
                 >
-                    <Input type='text' placeholder='Pack name' className='max-w-xs' />
+                    <Input type='text' name='packName' placeholder='Pack name' className='max-w-xs' />
                     <Button type='submit'>Generate a pack</Button>
                 </form>
-            </div>
+            ) : null}
         </main>
     )
 }
