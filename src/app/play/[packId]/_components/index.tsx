@@ -8,19 +8,20 @@ import { EndScreen } from './end-screen'
 
 export function Game({ pack }: { pack: Pack }) {
     const [game, setGameState] = useState<GameState>({ step: 'start-screen', result: null })
+
     function handleGameStart() {
         setGameState({ step: 'game-in-progress', result: null })
     }
     function handleGameEnd(result: GameResult) {
-        setGameState({ step: 'end', result })
+        setGameState({ step: 'end-screen', result })
     }
 
     if (game.step === 'start-screen') return <StartScreen onStart={handleGameStart} />
     if (game.step === 'game-in-progress') return <GameInProgress pack={pack} onEnd={handleGameEnd} />
-    if (game.step === 'end') return <EndScreen result={game.result} />
+    if (game.step === 'end-screen') return <EndScreen pack={pack} result={game.result} />
 }
 
-export type GameResult = unknown
+export type GameResult = { guessedWords: boolean[]; noMoreWords?: boolean }
 type GameStateStart = {
     step: 'start-screen'
     result: null
@@ -30,7 +31,7 @@ type GameStateGame = {
     result: null
 }
 type GameStateEnd = {
-    step: 'end'
+    step: 'end-screen'
     result: GameResult
 }
 type GameState = GameStateStart | GameStateGame | GameStateEnd
