@@ -5,6 +5,7 @@ import { isAdmin } from '~/lib/utils'
 import { CreatePackForm } from './_create-pack-form'
 import { Trash } from 'lucide-react'
 import { Button } from '~/components/ui/button'
+import { revalidatePath } from 'next/cache'
 
 export default async function PackSelectionPage() {
     const packs = await getAllPacks()
@@ -20,7 +21,7 @@ export default async function PackSelectionPage() {
                         action={async function () {
                             'use server'
                             await deletePack(pack.id)
-                            // TODO: refetch
+                            revalidatePath('/')
                         }}
                         className='relative flex cursor-pointer flex-col items-center justify-center overflow-clip rounded-md border-2 p-2 text-center text-white shadow-md lg:p-4'
                     >
