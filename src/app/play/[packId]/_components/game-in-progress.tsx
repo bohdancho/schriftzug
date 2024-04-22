@@ -14,6 +14,15 @@ export function GameInProgress({ pack, onEnd }: { pack: Pack; onEnd: (result: Ga
         setResult([...result, guessed])
     }
 
+    function handleTimeout() {
+        onEnd({ guessedWords: result })
+    }
+
+    if (currentWordIdx === pack.words.length) {
+        onEnd({ guessedWords: result, noMoreWords: true })
+        return
+    }
+
     return (
         <div className='flex h-full flex-col items-center justify-center gap-5'>
             <div className='text-5xl'>{pack.words[currentWordIdx]}</div>
@@ -21,7 +30,7 @@ export function GameInProgress({ pack, onEnd }: { pack: Pack; onEnd: (result: Ga
                 <Button onClick={() => handleTurn(false)}>Skip</Button>
                 <Button onClick={() => handleTurn(true)}>Guessed</Button>
             </div>
-            <Timer onTimeout={() => onEnd({ guessedWords: result })} duration={DEFAULT_GAME_DURATION} />
+            <Timer onTimeout={handleTimeout} duration={DEFAULT_GAME_DURATION} />
         </div>
     )
 }

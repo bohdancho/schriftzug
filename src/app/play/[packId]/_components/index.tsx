@@ -21,7 +21,7 @@ export function Game({ pack }: { pack: Pack }) {
     if (game.step === 'end-screen') return <EndScreen pack={pack} result={game.result} />
 }
 
-export type GameResult = { guessedWords: boolean[] }
+export type GameResult = { guessedWords: boolean[]; noMoreWords?: boolean }
 type GameStateStart = {
     step: 'start-screen'
     result: null
