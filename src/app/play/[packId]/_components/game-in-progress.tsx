@@ -1,4 +1,4 @@
-import type { Word, Pack } from '~/server/db/schema'
+import type { Word } from '~/server/db/schema'
 import { type GameResult } from '.'
 import { useEffect, useState } from 'react'
 import { Button } from '~/components/ui/button'
@@ -46,12 +46,12 @@ export function GameInProgress({ words, onEnd }: { words: Word[]; onEnd: (result
 }
 
 function Timer({ duration, onTimeout, className }: { duration: number; onTimeout: () => void; className?: string }) {
-    const [timeLeft, setTimeLeft] = useState(duration)
+    const [timeLeft, setTimeLeft] = useState(duration * 1000)
 
     useEffect(() => {
         const interval = setInterval(() => {
-            setTimeLeft((prev) => prev - 1)
-        }, 1000)
+            setTimeLeft((prev) => prev - 50)
+        }, 50)
 
         if (timeLeft <= 0) {
             clearInterval(interval)
@@ -65,8 +65,8 @@ function Timer({ duration, onTimeout, className }: { duration: number; onTimeout
 }
 
 function formatTime(time: number) {
-    const minutes = Math.floor(time / 60)
-    const seconds = time % 60
+    const minutes = Math.floor(time / 60_000)
+    const seconds = Math.floor((time % 60_000) / 1000)
 
     const minutesString = minutes.toString().padStart(2, '0')
     const secondsString = seconds.toString().padStart(2, '0')
