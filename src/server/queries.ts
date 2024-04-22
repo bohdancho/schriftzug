@@ -1,6 +1,11 @@
+'use server'
+
+import { currentUser } from '@clerk/nextjs/server'
 import { db } from './db'
 import { pack, word } from './db/schema'
 import { generatePackWords } from './llm'
+import { isAdmin } from '~/lib/utils'
+import { eq } from 'drizzle-orm'
 
 export async function getAllPacks() {
     return db.query.pack.findMany()
@@ -22,6 +27,11 @@ export async function getWordsByPackId(id: number) {
 }
 
 export async function createPack(name: string) {
+    const user = await currentUser()
+    if (!isAdmin(user)) {
+        throw new Error('Unauthorized')
+    }
+
     console.log(`Creating pack "${name}"`)
     const words = await generatePackWords(name, 50)
     if (!words) {
@@ -46,4 +56,15 @@ export async function createPack(name: string) {
             packId: newPackId,
         })),
     )
+}
+
+export async function deletePack(id: number) {
+    const user = await currentUser()
+    if (!isAdmin(user)) {
+        throw new Error('Unauthorized')
+    }
+
+    console.log(`Deleting pack ${id}`)
+    await db.delete(word).where(eq(word.packId, id))
+    await db.delete(pack).where(eq(pack.id, id))
 }
