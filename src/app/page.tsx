@@ -1,7 +1,8 @@
-import Image from 'next/image'
 import Link from 'next/link'
+import { Button } from '~/components/ui/button'
+import { Input } from '~/components/ui/input'
 import { generatePackWords } from '~/server/llm'
-import { getAllPacks } from '~/server/queries'
+import { createPack, getAllPacks } from '~/server/queries'
 
 export default async function PackSelectionPage() {
     const packs = await getAllPacks()
@@ -14,20 +15,8 @@ export default async function PackSelectionPage() {
                     <Link
                         href={`/play/${pack.id}`}
                         key={pack.name}
-                        className='flex cursor-pointer flex-col items-center overflow-clip rounded-md border-2 shadow-md'
+                        className='flex cursor-pointer flex-col items-center justify-center overflow-clip rounded-md border-2 p-2 text-center text-white shadow-md lg:p-4'
                     >
-                        <Image
-                            className='w-full'
-                            src={pack.imgUrl}
-                            alt={pack.name}
-                            width={200}
-                            height={200}
-                            style={{
-                                width: '100%',
-                                height: 'auto',
-                            }}
-                        />
-
                         <h2 className='p-2 lg:p-4'>{pack.name}</h2>
                     </Link>
                 ))}
@@ -37,10 +26,12 @@ export default async function PackSelectionPage() {
                     action={async () => {
                         'use server'
 
-                        console.log(await generatePackWords('League of Legends', 10))
+                        await createPack('Migranten in Deutschland')
                     }}
+                    className='flex gap-4'
                 >
-                    <button type='submit'>Generate words</button>
+                    <Input type='text' placeholder='Pack name' className='max-w-xs' />
+                    <Button type='submit'>Generate a pack</Button>
                 </form>
             </div>
         </main>
