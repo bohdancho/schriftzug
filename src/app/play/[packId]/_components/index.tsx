@@ -20,7 +20,7 @@ export function Game({ pack }: { pack: Pack }) {
     if (game.step === 'end') return <EndScreen result={game.result} />
 }
 
-export type GameResult = unknown
+export type GameResult = { guessedWords: boolean[] }
 type GameStateStart = {
     step: 'start-screen'
     result: null
