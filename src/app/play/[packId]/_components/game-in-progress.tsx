@@ -1,11 +1,11 @@
-import { type Pack } from '~/server/db/schema'
+import type { Word, Pack } from '~/server/db/schema'
 import { type GameResult } from '.'
 import { useEffect, useState } from 'react'
 import { Button } from '~/components/ui/button'
 import { env } from '~/env'
 
 const DEFAULT_GAME_DURATION = env.NEXT_PUBLIC_ENV === 'development' ? 5 : 60
-export function GameInProgress({ pack, onEnd }: { pack: Pack; onEnd: (result: GameResult) => void }) {
+export function GameInProgress({ words, onEnd }: { words: Word[]; onEnd: (result: GameResult) => void }) {
     const [currentWordIdx, setCurrentWordIdx] = useState(0)
     const [result, setResult] = useState<boolean[]>([])
 
@@ -18,7 +18,7 @@ export function GameInProgress({ pack, onEnd }: { pack: Pack; onEnd: (result: Ga
         onEnd({ guessedWords: result })
     }
 
-    if (currentWordIdx === pack.words.length) {
+    if (currentWordIdx === words.length) {
         onEnd({ guessedWords: result, noMoreWords: true })
         return
     }
@@ -27,7 +27,7 @@ export function GameInProgress({ pack, onEnd }: { pack: Pack; onEnd: (result: Ga
         <div className='container relative h-full'>
             <div className='relative grid h-full grid-cols-2'>
                 <div className='absolute z-10 w-full rounded-b-xl border-b border-primary-foreground bg-black/70 pb-8 pt-6 text-center text-5xl'>
-                    {pack.words[currentWordIdx]}
+                    {words[currentWordIdx]!.value}
                 </div>
                 <Button className='h-full text-4xl md:text-5xl' onClick={() => handleTurn(false)} variant='destructive'>
                     Skip

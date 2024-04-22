@@ -1,9 +1,10 @@
 import { notFound } from 'next/navigation'
-import { getPackById } from '~/server/queries'
+import { getPackById, getWordsByPackId } from '~/server/queries'
 import { Game } from './_components'
 
 export default async function PlayPackPage({ params: { packId } }: { params: { packId: string } }) {
     const pack = await getPackById(+packId)
+    const words = await getWordsByPackId(+packId)
     if (!pack) notFound()
 
     return (
@@ -14,7 +15,7 @@ export default async function PlayPackPage({ params: { packId } }: { params: { p
                     {pack.name}
                 </h1>
             </div>
-            <Game pack={pack} />
+            <Game pack={pack} words={words} />
         </div>
     )
 }
