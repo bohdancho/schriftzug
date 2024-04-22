@@ -10,13 +10,13 @@ export function EndScreen({ result, pack }: { result: GameResult; pack: Pack }) 
         <div className='flex flex-col items-center'>
             <div className='text-center text-2xl'>
                 <h1>
-                    You guessed {guessed} out of {result.guessedWords.length} words.
-                    {result.noMoreWords && ' No more words left in the pack.'}
+                    Time out! You guessed {guessed} out of {result.guessedWords.length} words.
+                    {result.noMoreWords && " This shouldn't be humanly possible to go this fast, but ok."}
                 </h1>
             </div>
             <ul className='flex flex-col justify-center gap-5'>
-                {result.guessedWords.map((hasGuessed, idx) => (
-                    <li key={idx} className={hasGuessed ? 'text-green-500' : 'text-red-500'}>
+                {result.guessedWords.map((didGuess, idx) => (
+                    <li key={idx} className={didGuess ? 'text-green-500' : 'text-red-500'}>
                         {idx + 1}. {pack.words[idx]}
                     </li>
                 ))}

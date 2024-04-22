@@ -8,7 +8,7 @@ export default async function PlayPackPage({ params: { packId } }: { params: { p
 
     return (
         <div className='flex flex-col py-4'>
-            <div className='relative border-b pb-4 text-center text-5xl'>
+            <div className='container relative border-b pb-4 text-5xl'>
                 <h1>
                     <PackIcon className='-mt-2 mr-2 inline-block' />
                     {pack.name}
