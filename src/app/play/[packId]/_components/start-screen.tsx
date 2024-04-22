@@ -10,7 +10,7 @@ export function StartScreen({ onStart }: { onStart: () => void }) {
                 <CardHeader className='gap-2'>
                     <CardTitle>
                         <span className='whitespace-nowrap'>Press START</span>{' '}
-                        <span className='whitespace-nowrap'>once you are ready</span>
+                        <span className='whitespace-nowrap'>whenever you are ready</span>
                     </CardTitle>
                     <CardDescription className='text-xl'>
                         Rules: 60s, explain as many words as possible without using same-root words.
