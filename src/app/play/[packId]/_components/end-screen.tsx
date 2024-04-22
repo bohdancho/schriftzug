@@ -1,9 +1,9 @@
-import { type Pack } from '~/server/db/schema'
+import type { Word } from '~/server/db/schema'
 import { type GameResult } from '.'
 import { Button } from '~/components/ui/button'
 import Link from 'next/link'
 
-export function EndScreen({ result, pack }: { result: GameResult; pack: Pack }) {
+export function EndScreen({ result, words }: { result: GameResult; words: Word[] }) {
     const guessed = result.guessedWords.filter((hasGuessed) => hasGuessed).length
 
     return (
@@ -18,7 +18,7 @@ export function EndScreen({ result, pack }: { result: GameResult; pack: Pack }) 
             <ul className='flex grow basis-0 flex-col gap-4 overflow-y-auto'>
                 {result.guessedWords.map((didGuess, idx) => (
                     <li key={idx} className={didGuess ? 'text-green-500' : 'text-red-500'}>
-                        {idx + 1}. {pack.words[idx]}
+                        {idx + 1}. {words[idx]!.value}
                     </li>
                 ))}
             </ul>

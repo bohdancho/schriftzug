@@ -10,3 +10,10 @@ export async function getPackById(id: number) {
     })
     return pack
 }
+
+export async function getWordsByPackId(id: number) {
+    const pack = await db.query.word.findMany({
+        where: (model, { eq }) => eq(model.packId, id),
+    })
+    return pack
+}
