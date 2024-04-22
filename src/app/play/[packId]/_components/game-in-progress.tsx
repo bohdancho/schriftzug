@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { Button } from '~/components/ui/button'
 import { env } from '~/env'
 
-const DEFAULT_GAME_DURATION = env.NEXT_PUBLIC_ENV === 'development' ? 5 : 60
+const DEFAULT_GAME_DURATION = env.NEXT_PUBLIC_ENV === 'development' ? 999999999 : 60
 export function GameInProgress({ pack, onEnd }: { pack: Pack; onEnd: (result: GameResult) => void }) {
     const [currentWordIdx, setCurrentWordIdx] = useState(0)
     const [result, setResult] = useState<boolean[]>([])
@@ -24,18 +24,24 @@ export function GameInProgress({ pack, onEnd }: { pack: Pack; onEnd: (result: Ga
     }
 
     return (
-        <div className='flex h-full flex-col items-center justify-center gap-5'>
-            <div className='text-5xl'>{pack.words[currentWordIdx]}</div>
-            <div className='flex'>
-                <Button onClick={() => handleTurn(false)}>Skip</Button>
-                <Button onClick={() => handleTurn(true)}>Guessed</Button>
+        <div className='container relative h-full'>
+            <div className='relative grid h-full grid-cols-2'>
+                <div className='absolute z-10 w-full rounded-b-xl border-b border-primary-foreground bg-black/70 pb-8 pt-6 text-center text-5xl'>
+                    {pack.words[currentWordIdx]}
+                </div>
+                <Button className='h-full text-5xl' onClick={() => handleTurn(false)}>
+                    Skip
+                </Button>
+                <Button className='h-full text-5xl' onClick={() => handleTurn(true)} variant='destructive'>
+                    Guessed
+                </Button>
+                <Timer onTimeout={handleTimeout} duration={DEFAULT_GAME_DURATION} className='absolute z-10' />
             </div>
-            <Timer onTimeout={handleTimeout} duration={DEFAULT_GAME_DURATION} />
         </div>
     )
 }
 
-function Timer({ duration, onTimeout }: { duration: number; onTimeout: () => void }) {
+function Timer({ duration, onTimeout, className }: { duration: number; onTimeout: () => void; className?: string }) {
     const [timeLeft, setTimeLeft] = useState(duration)
 
     useEffect(() => {
@@ -51,5 +57,5 @@ function Timer({ duration, onTimeout }: { duration: number; onTimeout: () => voi
         return () => clearInterval(interval)
     }, [timeLeft, onTimeout])
 
-    return <div>{timeLeft}</div>
+    return <div className={className}>{timeLeft}</div>
 }
