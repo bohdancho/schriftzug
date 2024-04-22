@@ -2,7 +2,9 @@ import { type Pack } from '~/server/db/schema'
 import { type GameResult } from '.'
 import { useEffect, useState } from 'react'
 import { Button } from '~/components/ui/button'
+import { env } from '~/env'
 
+const DEFAULT_GAME_DURATION = env.NEXT_PUBLIC_ENV === 'development' ? 5 : 60
 export function GameInProgress({ pack, onEnd }: { pack: Pack; onEnd: (result: GameResult) => void }) {
     const [currentWordIdx, setCurrentWordIdx] = useState(0)
     const [result, setResult] = useState<boolean[]>([])
@@ -19,7 +21,7 @@ export function GameInProgress({ pack, onEnd }: { pack: Pack; onEnd: (result: Ga
                 <Button onClick={() => handleTurn(false)}>Skip</Button>
                 <Button onClick={() => handleTurn(true)}>Guessed</Button>
             </div>
-            <Timer onTimeout={() => onEnd({ guessedWords: result })} duration={60} />
+            <Timer onTimeout={() => onEnd({ guessedWords: result })} duration={DEFAULT_GAME_DURATION} />
         </div>
     )
 }
