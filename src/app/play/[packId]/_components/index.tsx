@@ -6,7 +6,7 @@ import { StartScreen } from './start-screen'
 import { GameInProgress } from './game-in-progress'
 import { EndScreen } from './end-screen'
 
-export function Game({ pack, words }: { pack: Pack; words: Word[] }) {
+export function Game({ words }: { pack: Pack; words: Word[] }) {
     const [game, setGameState] = useState<GameState>({ step: 'start-screen', result: null })
 
     function handleGameStart() {

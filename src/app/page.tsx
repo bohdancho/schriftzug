@@ -17,7 +17,7 @@ export default async function PackSelectionPage() {
             <div className='grid grid-cols-[repeat(auto-fill,minmax(min(180px,40%),1fr))] gap-4'>
                 {packs.map((pack) => (
                     <form
-                        key={pack.name}
+                        key={pack.id}
                         action={async function () {
                             'use server'
                             await deletePack(pack.id)
@@ -28,7 +28,7 @@ export default async function PackSelectionPage() {
                         <Button type='submit' variant='destructive' className='absolute right-1 top-1 p-2'>
                             <Trash />
                         </Button>
-                        <Link href={`/play/${pack.id}`} className=''>
+                        <Link href={`/play/${pack.id}`}>
                             <h2 className='p-2 lg:p-4'>{pack.name}</h2>
                         </Link>
                     </form>

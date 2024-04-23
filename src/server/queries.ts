@@ -6,6 +6,7 @@ import { pack, word } from './db/schema'
 import { generatePackWords } from './llm'
 import { isAdmin } from '~/lib/utils'
 import { eq } from 'drizzle-orm'
+import { revalidatePath } from 'next/cache'
 
 export async function getAllPacks() {
     return db.query.pack.findMany()
@@ -56,6 +57,8 @@ export async function createPack(name: string) {
             packId: newPackId,
         })),
     )
+
+    revalidatePath('/')
 }
 
 export async function deletePack(id: number) {
