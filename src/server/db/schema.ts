@@ -6,7 +6,6 @@ export const createTable = pgTableCreator((name) => `schriftzug_${name}`)
 export const pack = createTable('pack', {
     id: serial('id').primaryKey(),
     name: varchar('name', { length: 256 }).notNull(),
-    imgUrl: varchar('img_url', { length: 256 }).notNull(),
 })
 
 export const packRelations = relations(pack, ({ many }) => ({

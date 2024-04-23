@@ -28,25 +28,19 @@ export async function getPackByIdWithWords(id: number) {
 export async function createPack(name: string) {
     const user = await currentUser()
     if (!isAdmin(user)) {
-        throw new Error('Unauthorized')
+        return { error: 'Unauthorized' }
     }
 
     console.log(`Creating pack "${name}"`)
     const words = await generatePackWords(name, 50)
     if (!words) {
-        throw new Error('Failed to generate words')
+        return { error: 'Failed to generate words' }
     }
 
-    const newPack = await db
-        .insert(pack)
-        .values({
-            name,
-            imgUrl: 'https://picsum.photos/200',
-        })
-        .returning({ insertedId: pack.id })
+    const newPack = await db.insert(pack).values({ name }).returning({ insertedId: pack.id })
     const newPackId = newPack[0]?.insertedId
     if (!newPackId) {
-        throw new Error('Failed to create pack')
+        return { error: 'Failed to create pack' }
     }
 
     await db.insert(word).values(
@@ -57,6 +51,7 @@ export async function createPack(name: string) {
     )
 
     revalidatePath('/')
+    return { ok: true }
 }
 
 export async function deletePack(id: number) {
@@ -67,4 +62,6 @@ export async function deletePack(id: number) {
 
     console.log(`Deleting pack ${id}`)
     await db.delete(pack).where(eq(pack.id, id))
+
+    revalidatePath('/')
 }
