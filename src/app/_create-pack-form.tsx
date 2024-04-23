@@ -11,17 +11,19 @@ export function CreatePackForm() {
     const [packName, setPackName] = useState('')
 
     async function handleSubmit() {
-        toast.message('Creating a pack...')
+        toast.message('Creating a pack...', { id: 'creating-pack', duration: Infinity })
         if (packName.trim().length < 3) {
             toast.error('Pack name must be at least 3 characters long')
         }
         try {
             await createPack(packName)
+            toast.dismiss('creating-pack')
             toast.success('Pack created')
             // TODO: refetch
         } catch (err) {
             const error = err as { message?: string }
-            toast.error(error.message ?? 'An error occurred')
+            toast.dismiss('creating-pack')
+            toast.error(error.message ?? 'An unknown error occurred while creating a pack')
         }
     }
 
