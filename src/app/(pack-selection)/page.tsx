@@ -3,7 +3,7 @@ import { deletePack, getAllPacks } from '~/server/queries'
 import { currentUser } from '@clerk/nextjs/server'
 import { isAdmin } from '~/lib/utils'
 import { revalidatePath } from 'next/cache'
-import { CreatePackForm } from './_components/_create-pack-form'
+import { CreatePackForm } from './_components/create-pack-form'
 import { DeletePackButton } from './_components/delete-pack-button'
 
 export default async function PackSelectionPage() {
