@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { Button } from '~/components/ui/button'
 import { env } from '~/env'
 
-const DEFAULT_GAME_DURATION = env.NEXT_PUBLIC_ENV === 'development' ? 5 : 60
+const DEFAULT_GAME_DURATION = env.NEXT_PUBLIC_ENV === 'development' ? 5 : 180
 export function GameInProgress({ words, onEnd }: { words: Word[]; onEnd: (result: GameResult) => void }) {
     const [currentWordIdx, setCurrentWordIdx] = useState(0)
     const [result, setResult] = useState<boolean[]>([])
