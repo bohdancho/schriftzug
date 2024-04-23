@@ -3,7 +3,6 @@ import '~/styles/globals.css'
 import { ClerkProvider, SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
 import { Inter } from 'next/font/google'
 import { Toaster } from '~/components/ui/sonner'
-import { Button } from '~/components/ui/button'
 import Link from 'next/link'
 
 const inter = Inter({

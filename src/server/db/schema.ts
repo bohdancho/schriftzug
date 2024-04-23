@@ -16,7 +16,7 @@ export const packRelations = relations(pack, ({ many }) => ({
 export const word = createTable('word', {
     id: serial('id').primaryKey(),
     value: varchar('value', { length: 256 }).notNull(),
-    packId: integer('pack_id').notNull(),
+    packId: integer('pack_id').references(() => pack.id, { onDelete: 'cascade' }),
 })
 
 export const wordRelations = relations(word, ({ one }) => ({
@@ -28,3 +28,4 @@ export const wordRelations = relations(word, ({ one }) => ({
 
 export type Pack = typeof pack.$inferSelect
 export type Word = typeof word.$inferSelect
+export type PackWithWords = Pack & { words: Word[] }
