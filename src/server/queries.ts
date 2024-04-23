@@ -13,18 +13,16 @@ export async function getAllPacks() {
 }
 
 export async function getPackById(id: number) {
-    const pack = await db.query.pack.findFirst({
+    return db.query.pack.findFirst({
         where: (model, { eq }) => eq(model.id, id),
     })
-    return pack
 }
 
-export async function getWordsByPackId(id: number) {
-    const pack = await db.query.word.findMany({
-        where: (word, { eq }) => eq(word.packId, id),
-        orderBy: (_, { sql }) => sql`random()`,
+export async function getPackByIdWithWords(id: number) {
+    return db.query.pack.findFirst({
+        where: (model, { eq }) => eq(model.id, id),
+        with: { words: true },
     })
-    return pack
 }
 
 export async function createPack(name: string) {
@@ -68,6 +66,5 @@ export async function deletePack(id: number) {
     }
 
     console.log(`Deleting pack ${id}`)
-    await db.delete(word).where(eq(word.packId, id))
     await db.delete(pack).where(eq(pack.id, id))
 }
