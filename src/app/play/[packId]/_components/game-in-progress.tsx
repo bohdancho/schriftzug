@@ -2,10 +2,16 @@ import type { Word } from '~/server/db/schema'
 import { type GameResult } from '.'
 import { useEffect, useState } from 'react'
 import { Button } from '~/components/ui/button'
-import { env } from '~/env'
 
-const DEFAULT_GAME_DURATION = env.NEXT_PUBLIC_ENV === 'development' ? 5 : 60
-export function GameInProgress({ words, onEnd }: { words: Word[]; onEnd: (result: GameResult) => void }) {
+export function GameInProgress({
+    words,
+    durationSec,
+    onEnd,
+}: {
+    words: Word[]
+    durationSec: number
+    onEnd: (result: GameResult) => void
+}) {
     const [currentWordIdx, setCurrentWordIdx] = useState(0)
     const [result, setResult] = useState<boolean[]>([])
 
@@ -37,7 +43,7 @@ export function GameInProgress({ words, onEnd }: { words: Word[]; onEnd: (result
                 </Button>
                 <Timer
                     onTimeout={handleTimeout}
-                    duration={DEFAULT_GAME_DURATION}
+                    durationSec={durationSec}
                     className='pointer-events-none absolute bottom-4 left-1/2 z-10 -translate-x-1/2 font-mono text-5xl'
                 />
             </div>
@@ -45,23 +51,31 @@ export function GameInProgress({ words, onEnd }: { words: Word[]; onEnd: (result
     )
 }
 
-function Timer({ duration, onTimeout, className }: { duration: number; onTimeout: () => void; className?: string }) {
-    const [timeLeft, setTimeLeft] = useState(duration * 1000)
+function Timer({
+    durationSec,
+    onTimeout,
+    className,
+}: {
+    durationSec: number
+    onTimeout: () => void
+    className?: string
+}) {
+    const [timeLeftMs, setTimeLeftMs] = useState(durationSec * 1000)
 
     useEffect(() => {
         const interval = setInterval(() => {
-            setTimeLeft((prev) => prev - 50)
+            setTimeLeftMs((prev) => prev - 50)
         }, 50)
 
-        if (timeLeft <= 0) {
+        if (timeLeftMs <= 0) {
             clearInterval(interval)
             onTimeout()
         }
 
         return () => clearInterval(interval)
-    }, [timeLeft, onTimeout])
+    }, [timeLeftMs, onTimeout])
 
-    return <div className={className}>{formatTime(timeLeft)}</div>
+    return <div className={className}>{formatTime(timeLeftMs)}</div>
 }
 
 function formatTime(time: number) {

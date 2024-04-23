@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { Button } from '~/components/ui/button'
 import { Card, CardHeader, CardTitle, CardDescription, CardFooter } from '~/components/ui/card'
 
-export function StartScreen({ onStart }: { onStart: () => void }) {
+export function StartScreen({ durationSec, onStart }: { durationSec: number; onStart: () => void }) {
     return (
         <div className='container flex flex-1 items-center justify-center'>
             <Card className='w-[fit-content]'>
@@ -13,7 +13,7 @@ export function StartScreen({ onStart }: { onStart: () => void }) {
                         <span className='whitespace-nowrap'>whenever you are ready</span>
                     </CardTitle>
                     <CardDescription className='text-xl'>
-                        Rules: 60s, explain as many words as possible without using same-root words.
+                        Rules: {durationSec}s, explain as many words as possible without using same-root words.
                     </CardDescription>
                 </CardHeader>
                 <CardFooter className='justify-center gap-2'>
