@@ -6,11 +6,12 @@ import { GameInProgress } from './game-in-progress'
 import { EndScreen } from './end-screen'
 import type { Pack, Word } from '~/server/db/schema'
 import { env } from '~/env'
+import { useLocalStorage } from 'usehooks-ts'
 
 const DEFAULT_GAME_DURATION = env.NEXT_PUBLIC_ENV === 'development' ? 5 : 60
-const durationSec = DEFAULT_GAME_DURATION
 
 export function Game({ words }: { pack: Pack; words: Word[] }) {
+    const [durationSec, setDurationSec] = useLocalStorage('game-duration', DEFAULT_GAME_DURATION)
     const [game, setGameState] = useState<GameState>({ step: 'start-screen', result: null })
 
     function handleGameStart() {
@@ -20,7 +21,8 @@ export function Game({ words }: { pack: Pack; words: Word[] }) {
         setGameState({ step: 'end-screen', result })
     }
 
-    if (game.step === 'start-screen') return <StartScreen onStart={handleGameStart} durationSec={durationSec} />
+    if (game.step === 'start-screen')
+        return <StartScreen onStart={handleGameStart} durationSec={durationSec} onDurationChange={setDurationSec} />
     if (game.step === 'game-in-progress')
         return <GameInProgress words={words} onEnd={handleGameEnd} durationSec={durationSec} />
     if (game.step === 'end-screen') return <EndScreen words={words} result={game.result} />
