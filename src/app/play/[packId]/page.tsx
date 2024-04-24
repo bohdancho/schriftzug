@@ -3,47 +3,46 @@ import { getPackByIdWithWords } from '~/server/queries'
 import { Game } from './_components'
 import { Suspense } from 'react'
 import { Skeleton } from '~/components/ui/skeleton'
+import { Button } from '~/components/ui/button'
+import Link from 'next/link'
+import { Undo2 } from 'lucide-react'
+import type { Pack, Word } from '~/server/db/schema'
 
-export default async function PlayPackPage({ params: { packId } }: { params: { packId: string } }) {
+export default async function Page({ params: { packId } }: { params: { packId: string } }) {
     return (
         <div className='flex h-full flex-col py-4'>
-            <Suspense fallback={<PageContentSkeleton />}>
-                <PageContent packId={packId} />
+            <Suspense fallback={<PageContent skeleton />}>
+                <PageLoader packId={packId} />
             </Suspense>
         </div>
     )
 }
 
-async function PageContent({ packId }: { packId: string }) {
+async function PageLoader({ packId }: { packId: string }) {
     const pack = await getPackByIdWithWords(+packId)
     if (!pack) notFound()
+    return <PageContent pack={pack} words={pack.words} />
+}
 
+type PageContentProps =
+    | { pack?: Pack; words?: Word[]; skeleton?: false }
+    | { pack?: undefined; words?: undefined; skeleton: true }
+function PageContent({ pack, words }: PageContentProps) {
     return (
         <>
             <div className='relative border-b pb-4 text-5xl'>
-                <h1 className='container grid h-14 grid-cols-[auto,1fr] items-center gap-2'>
+                <h1 className='container grid h-14 grid-cols-[auto,1fr,auto] items-center gap-2'>
                     <PackIcon />
-                    <span className='-mt-2'>{pack.name}</span>
+                    {pack?.name ? <span className='-mt-2'>{pack.name}</span> : <Skeleton className='h-full' />}
+                    <Button variant='destructive' asChild>
+                        <Link href='/'>
+                            Go back <Undo2 className='ml-2' />
+                        </Link>
+                    </Button>
                 </h1>
             </div>
             <div className='container h-full'>
-                <Game pack={pack} words={pack.words} />
-            </div>
-        </>
-    )
-}
-
-function PageContentSkeleton() {
-    return (
-        <>
-            <div className='relative border-b pb-4 text-5xl'>
-                <h1 className='container grid h-14 grid-cols-[auto,1fr] items-center gap-2'>
-                    <PackIcon />
-                    <Skeleton className='h-full' />
-                </h1>
-            </div>
-            <div className='container pt-4 text-3xl'>
-                <p>Loading...</p>
+                {pack && words ? <Game pack={pack} words={words} /> : <p className='pt-4 text-3xl'>Loading...</p>}
             </div>
         </>
     )
