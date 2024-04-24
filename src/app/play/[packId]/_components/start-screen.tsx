@@ -23,16 +23,16 @@ export function StartScreen({
     }, [debouncedDuration, onDurationChange])
 
     return (
-        <div className='container flex flex-1 items-center justify-center'>
+        <div className='flex h-full items-center justify-center'>
             <Card className='w-[fit-content]'>
-                <CardHeader className='gap-2'>
+                <CardHeader className='mb-4 gap-2 p-0 sm:px-6 sm:pt-6'>
                     <CardTitle>
                         <span className='whitespace-nowrap'>Press START</span>{' '}
                         <span className='whitespace-nowrap'>whenever you are ready</span>
                     </CardTitle>
                     <CardDescription className='text-xl'>
                         Explain as many words as possible without using same-root words.
-                        <span className='block'>
+                        <span className='mt-2 block'>
                             Game duration:
                             <Input
                                 className='inline w-10 p-1 text-center'

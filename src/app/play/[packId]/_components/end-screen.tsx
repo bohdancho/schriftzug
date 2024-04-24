@@ -7,7 +7,7 @@ export function EndScreen({ result, words }: { result: GameResult; words: Word[]
     const guessed = result.guessedWords.filter((hasGuessed) => hasGuessed).length
 
     return (
-        <div className='container flex h-full flex-col gap-4 pt-4'>
+        <div className='flex h-full flex-col gap-4 pt-4'>
             <div>
                 <h1 className='text-2xl'>
                     Time out! You guessed <span className='text-primary'>{guessed}</span> out of{' '}

@@ -1,21 +1,51 @@
 import { notFound } from 'next/navigation'
 import { getPackByIdWithWords } from '~/server/queries'
 import { Game } from './_components'
+import { Suspense } from 'react'
+import { Skeleton } from '~/components/ui/skeleton'
 
 export default async function PlayPackPage({ params: { packId } }: { params: { packId: string } }) {
+    return (
+        <div className='flex h-full flex-col py-4'>
+            <Suspense fallback={<PageContentSkeleton />}>
+                <PageContent packId={packId} />
+            </Suspense>
+        </div>
+    )
+}
+
+async function PageContent({ packId }: { packId: string }) {
     const pack = await getPackByIdWithWords(+packId)
     if (!pack) notFound()
 
     return (
-        <div className='flex flex-col py-4'>
+        <>
             <div className='relative border-b pb-4 text-5xl'>
-                <h1 className='container'>
-                    <PackIcon className='-mt-2 mr-2 inline-block' />
-                    {pack.name}
+                <h1 className='container grid h-14 grid-cols-[auto,1fr] items-center gap-2'>
+                    <PackIcon />
+                    <span className='-mt-2'>{pack.name}</span>
                 </h1>
             </div>
-            <Game pack={pack} words={pack.words} />
-        </div>
+            <div className='container h-full'>
+                <Game pack={pack} words={pack.words} />
+            </div>
+        </>
+    )
+}
+
+function PageContentSkeleton() {
+    return (
+        <>
+            <div className='relative border-b pb-4 text-5xl'>
+                <h1 className='container grid h-14 grid-cols-[auto,1fr] items-center gap-2'>
+                    <PackIcon />
+                    <Skeleton className='h-full' />
+                </h1>
+            </div>
+            <div className='container pt-4 text-3xl'>
+                <p>Loading...</p>
+            </div>
+        </>
     )
 }
 

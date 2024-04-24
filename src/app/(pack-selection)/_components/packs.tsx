@@ -1,6 +1,6 @@
 'use client'
 
-import { useOptimistic, useState } from 'react'
+import { useOptimistic, startTransition, useState } from 'react'
 import { useFormStatus } from 'react-dom'
 import { toast } from 'sonner'
 import { Button } from '~/components/ui/button'
@@ -12,30 +12,50 @@ import { cn } from '~/lib/utils'
 import { Trash } from 'lucide-react'
 
 type MaybeOptimistic<T> = T & { optimistic?: boolean }
-export function Packs({ packs, withCreateForm }: { packs: Pack[]; withCreateForm: boolean }) {
+export function Packs({ packs, withCreateDeleteRights }: { packs: Pack[]; withCreateDeleteRights: boolean }) {
     const [optimisticPacks, setOptimisticPacks] = useOptimistic<MaybeOptimistic<Pack>[]>(packs)
+
+    async function handleDeletePack(id: number) {
+        startTransition(() =>
+            setOptimisticPacks((prev) => prev.map((pack) => (pack.id === id ? { ...pack, optimistic: true } : pack))),
+        )
+        const { error } = await deletePack(id)
+        if (error) {
+            toast.error(error)
+            return
+        }
+    }
 
     return (
         <>
             <ul className='grid grid-cols-[repeat(auto-fill,minmax(min(180px,40%),1fr))] gap-4'>
                 {optimisticPacks.map((pack) => (
-                    <li key={pack.id}>
-                        <form
-                            action={pack.optimistic ? undefined : () => deletePack(pack.id)}
-                            className={cn(
-                                'relative flex cursor-pointer flex-col items-center justify-center overflow-clip rounded-md border-2 p-2 text-center text-white shadow-md lg:p-4',
-                                { 'pointer-events-none opacity-50': 'optimistic' in pack && pack.optimistic },
-                            )}
+                    <li
+                        key={pack.id}
+                        className={cn('relative', {
+                            'pointer-events-none opacity-50': 'optimistic' in pack && pack.optimistic,
+                        })}
+                    >
+                        {withCreateDeleteRights && (
+                            <Button
+                                type='submit'
+                                onClick={() => handleDeletePack(pack.id)}
+                                variant='destructive'
+                                className='absolute right-1 top-1 p-2'
+                            >
+                                <Trash />
+                            </Button>
+                        )}
+                        <Link
+                            href={`/play/${pack.id}`}
+                            className='flex flex-col items-center justify-center rounded-md border-2 p-2 text-center text-white shadow-md lg:p-4'
                         >
-                            <DeletePackButton className='absolute right-1 top-1' />
-                            <Link href={`/play/${pack.id}`}>
-                                <h2 className='p-2 lg:p-4'>{pack.name}</h2>
-                            </Link>
-                        </form>
+                            <h2 className='p-2 lg:p-4'>{pack.name}</h2>
+                        </Link>
                     </li>
                 ))}
             </ul>
-            {withCreateForm && <CreatePackForm setOptimisticPacks={setOptimisticPacks} />}
+            {withCreateDeleteRights && <CreatePackForm setOptimisticPacks={setOptimisticPacks} />}
         </>
     )
 }
@@ -47,7 +67,7 @@ export function CreatePackForm({
 }) {
     const [packName, setPackName] = useState('')
 
-    async function clientAction() {
+    async function handleSubmit() {
         if (packName.trim().length < 3) {
             toast.error('Pack name must be at least 3 characters long')
             return
@@ -57,11 +77,15 @@ export function CreatePackForm({
         const newPack = { name: packName, optimistic: true, id: Math.random() }
 
         setPackName('')
-        setOptimisticPacks((prev) => [...prev, newPack])
-        const res = await createPack(newPack.name)
-        if (res.error) {
+        // @ts-expect-error typescript doesn't like this for some reason
+        startTransition(() => setOptimisticPacks((prev: MaybeOptimistic<Pack>[]) => [...prev, newPack]))
+
+        const { error } = await createPack(newPack.name)
+        // TODO: figure out why this blocks navigation
+
+        if (error) {
             toast.dismiss('creating-pack')
-            toast.error(res.error)
+            toast.error(error)
             return
         }
         toast.dismiss('creating-pack')
@@ -69,7 +93,7 @@ export function CreatePackForm({
     }
 
     return (
-        <form action={clientAction} className='flex gap-4'>
+        <form action={handleSubmit} className='flex gap-4'>
             <Input
                 type='text'
                 value={packName}
@@ -87,16 +111,6 @@ function SubmitButton() {
     return (
         <Button type='submit' disabled={pending}>
             Generate
-        </Button>
-    )
-}
-
-export function DeletePackButton({ className }: { className?: string }) {
-    const { pending } = useFormStatus()
-
-    return (
-        <Button type='submit' disabled={pending} variant='destructive' className={cn('p-2', className)}>
-            <Trash />
         </Button>
     )
 }

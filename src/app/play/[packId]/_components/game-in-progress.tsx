@@ -30,7 +30,7 @@ export function GameInProgress({
     }
 
     return (
-        <div className='container relative h-full'>
+        <div className='relative h-full'>
             <div className='relative grid h-full grid-cols-2'>
                 <div className='absolute z-10 w-full rounded-b-xl border-b border-primary-foreground bg-black/70 pb-8 pt-6 text-center text-5xl'>
                     {words[currentWordIdx]!.value}

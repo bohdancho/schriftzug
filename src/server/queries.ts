@@ -25,7 +25,7 @@ export async function getPackByIdWithWords(id: number) {
     })
 }
 
-export async function createPack(name: string) {
+export async function createPack(name: string): Promise<{ error?: string }> {
     const user = await currentUser()
     if (!isAdmin(user)) {
         return { error: 'Unauthorized' }
@@ -51,17 +51,18 @@ export async function createPack(name: string) {
     )
 
     revalidatePath('/')
-    return { ok: true }
+    return {}
 }
 
-export async function deletePack(id: number) {
+export async function deletePack(id: number): Promise<{ error?: string }> {
     const user = await currentUser()
     if (!isAdmin(user)) {
-        throw new Error('Unauthorized')
+        return { error: 'Unauthorized' }
     }
 
     console.log(`Deleting pack ${id}`)
     await db.delete(pack).where(eq(pack.id, id))
 
     revalidatePath('/')
+    return {}
 }
