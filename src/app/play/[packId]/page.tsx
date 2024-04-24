@@ -10,7 +10,7 @@ import type { Pack, Word } from '~/server/db/schema'
 
 export default async function Page({ params: { packId } }: { params: { packId: string } }) {
     return (
-        <div className='flex h-full flex-col py-4'>
+        <div className='flex h-full flex-col'>
             <Suspense fallback={<PageContent skeleton />}>
                 <PageLoader packId={packId} />
             </Suspense>
@@ -30,8 +30,8 @@ type PageContentProps =
 function PageContent({ pack, words }: PageContentProps) {
     return (
         <>
-            <div className='relative border-b pb-4 text-5xl'>
-                <h1 className='container grid h-14 grid-cols-[auto,1fr,auto] items-center gap-2'>
+            <div className='relative border-b py-4'>
+                <h1 className='container grid grid-cols-[auto,1fr,auto] items-center gap-2 text-2xl md:text-3xl'>
                     <PackIcon />
                     {pack?.name ? <span className='-mt-2'>{pack.name}</span> : <Skeleton className='h-full' />}
                     <Button variant='destructive' asChild>
