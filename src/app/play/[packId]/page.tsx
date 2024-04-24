@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation'
-import { getPackByIdWithWords } from '~/server/queries'
+import { getPackByIdWithWords } from '~/server/actions'
 import { Game } from './_components'
 import { Suspense } from 'react'
 import { Skeleton } from '~/components/ui/skeleton'

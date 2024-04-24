@@ -1,4 +1,4 @@
-import { getAllPacks } from '~/server/queries'
+import { getAllPacks } from '~/server/actions'
 import { currentUser } from '@clerk/nextjs/server'
 import { isAdmin } from '~/lib/utils'
 import { Packs } from './_components/packs'
