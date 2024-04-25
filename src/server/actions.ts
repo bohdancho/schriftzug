@@ -3,14 +3,13 @@
 import { currentUser } from '@clerk/nextjs/server'
 import { db } from './db'
 import { pack, word } from './db/schema'
-import { generatePackWords } from './llm'
 import { isAdmin } from '~/lib/utils'
-import { eq } from 'drizzle-orm'
-import { revalidatePath } from 'next/cache'
+import { asc, eq } from 'drizzle-orm'
+import { unstable_cache as cache, revalidateTag } from 'next/cache'
 
-export async function getAllPacks() {
-    return db.query.pack.findMany()
-}
+const ALL_PACKS_TAG = 'all-packs'
+
+export const getAllPacks = cache(async () => db.query.pack.findMany({ orderBy: asc(pack.id) }), [ALL_PACKS_TAG])
 
 export async function getPackById(id: number) {
     return db.query.pack.findFirst({
@@ -50,7 +49,7 @@ export async function createPack(name: string): Promise<{ error?: string }> {
         })),
     )
 
-    revalidatePath('/')
+    revalidateTag(ALL_PACKS_TAG)
     return {}
 }
 
@@ -63,6 +62,6 @@ export async function deletePack(id: number): Promise<{ error?: string }> {
     console.log(`Deleting pack ${id}`)
     await db.delete(pack).where(eq(pack.id, id))
 
-    revalidatePath('/')
+    revalidateTag(ALL_PACKS_TAG)
     return {}
 }
