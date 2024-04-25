@@ -4,7 +4,7 @@ import { currentUser } from '@clerk/nextjs/server'
 import { db } from './db'
 import { pack, word } from './db/schema'
 import { isAdmin } from '~/lib/utils'
-import { asc, eq } from 'drizzle-orm'
+import { asc, eq, sql } from 'drizzle-orm'
 import { unstable_cache as cache, revalidateTag } from 'next/cache'
 
 const ALL_PACKS_TAG = 'all-packs'
@@ -17,11 +17,12 @@ export async function getPackById(id: number) {
     })
 }
 
-export async function getPackByIdWithWords(id: number) {
-    return db.query.pack.findFirst({
-        where: (model, { eq }) => eq(model.id, id),
-        with: { words: true },
-    })
+export async function getPackWords(packId: number) {
+    return db
+        .select()
+        .from(word)
+        .where(eq(word.packId, packId))
+        .orderBy(sql`random()`)
 }
 
 export async function createPack(name: string): Promise<{ error?: string }> {
@@ -31,7 +32,8 @@ export async function createPack(name: string): Promise<{ error?: string }> {
     }
 
     console.log(`Creating pack "${name}"`)
-    const words = await generatePackWords(name, 50)
+    // const words = await generatePackWords(name, 50)
+    const words = ['word1', 'word2', 'word3', 'word4', 'word5']
     if (!words) {
         return { error: 'Failed to generate words' }
     }

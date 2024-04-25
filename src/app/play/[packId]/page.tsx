@@ -1,5 +1,4 @@
 import { notFound } from 'next/navigation'
-import { getPackByIdWithWords } from '~/server/actions'
 import { Game } from './_components'
 import { Suspense } from 'react'
 import { Skeleton } from '~/components/ui/skeleton'
@@ -7,6 +6,7 @@ import { Button } from '~/components/ui/button'
 import Link from 'next/link'
 import { Undo2 } from 'lucide-react'
 import type { Pack, Word } from '~/server/db/schema'
+import { getPackById, getPackWords } from '~/server/actions'
 
 export default async function Page({ params: { packId } }: { params: { packId: string } }) {
     return (
@@ -19,9 +19,10 @@ export default async function Page({ params: { packId } }: { params: { packId: s
 }
 
 async function PageLoader({ packId }: { packId: string }) {
-    const pack = await getPackByIdWithWords(+packId)
+    const pack = await getPackById(+packId)
+    const words = await getPackWords(+packId)
     if (!pack) notFound()
-    return <PageContent pack={pack} words={pack.words} />
+    return <PageContent pack={pack} words={words} />
 }
 
 type PageContentProps =
