@@ -6,6 +6,7 @@ import { pack, word } from './db/schema'
 import { isAdmin } from '~/lib/utils'
 import { asc, eq, sql } from 'drizzle-orm'
 import { unstable_cache as cache, revalidateTag } from 'next/cache'
+import { generatePackWords } from './llm'
 
 const ALL_PACKS_TAG = 'all-packs'
 
@@ -32,8 +33,7 @@ export async function createPack(name: string): Promise<{ error?: string }> {
     }
 
     console.log(`Creating pack "${name}"`)
-    // const words = await generatePackWords(name, 50)
-    const words = ['word1', 'word2', 'word3', 'word4', 'word5']
+    const words = await generatePackWords(name, 50)
     if (!words) {
         return { error: 'Failed to generate words' }
     }
