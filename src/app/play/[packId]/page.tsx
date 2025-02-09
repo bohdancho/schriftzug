@@ -8,7 +8,13 @@ import { Undo2 } from 'lucide-react'
 import type { Pack, Word } from '~/server/db/schema'
 import { getPackById, getPackWords } from '~/server/actions'
 
-export default async function Page({ params: { packId } }: { params: { packId: string } }) {
+export default async function Page(props: { params: Promise<{ packId: string }> }) {
+    const params = await props.params;
+
+    const {
+        packId
+    } = params;
+
     return (
         <div className='flex h-full flex-col'>
             <Suspense fallback={<PageContent skeleton />}>
