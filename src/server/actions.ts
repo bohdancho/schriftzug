@@ -10,6 +10,7 @@ import { generatePackWords } from './llm'
 
 const ALL_PACKS_TAG = 'all-packs'
 
+// TODO: make caching work (revalidateTag doesn't result in revalidation)
 export const getAllPacks = cache(async () => db.query.pack.findMany({ orderBy: asc(pack.id) }), [ALL_PACKS_TAG])
 
 export async function getPackById(id: number) {

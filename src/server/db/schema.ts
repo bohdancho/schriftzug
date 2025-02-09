@@ -1,21 +1,19 @@
 import { relations } from 'drizzle-orm'
-import { integer, pgTableCreator, serial, varchar } from 'drizzle-orm/pg-core'
+import { int, sqliteTable, text } from 'drizzle-orm/sqlite-core'
 
-export const createTable = pgTableCreator((name) => `schriftzug_${name}`)
-
-export const pack = createTable('pack', {
-    id: serial('id').primaryKey(),
-    name: varchar('name', { length: 256 }).notNull(),
+export const pack = sqliteTable('pack', {
+    id: int('id', { mode: 'number' }).primaryKey({ autoIncrement: true }),
+    name: text('name', { length: 256 }).notNull(),
 })
 
 export const packRelations = relations(pack, ({ many }) => ({
     words: many(word),
 }))
 
-export const word = createTable('word', {
-    id: serial('id').primaryKey(),
-    value: varchar('value', { length: 256 }).notNull(),
-    packId: integer('pack_id').references(() => pack.id, { onDelete: 'cascade' }),
+export const word = sqliteTable('word', {
+    id: int('id', { mode: 'number' }).primaryKey({ autoIncrement: true }),
+    value: text('value', { length: 256 }).notNull(),
+    packId: int('pack_id').references(() => pack.id, { onDelete: 'cascade' }),
 })
 
 export const wordRelations = relations(word, ({ one }) => ({

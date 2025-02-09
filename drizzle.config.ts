@@ -4,9 +4,8 @@ import { env } from '~/env'
 
 export default {
     schema: './src/server/db/schema.ts',
-    driver: 'pg',
+    dialect: 'sqlite',
     dbCredentials: {
-        connectionString: env.POSTGRES_URL,
+        url: env.DATABASE_URL,
     },
-    tablesFilter: ['schriftzug_*'],
 } satisfies Config

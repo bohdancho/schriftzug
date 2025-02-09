@@ -7,9 +7,9 @@ export const env = createEnv({
      * isn't built with invalid env vars.
      */
     server: {
-        POSTGRES_URL: z.string().url(),
+        DATABASE_URL: z.string(),
         NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
-        LLM_API_KEY: z.string(),
+        GEMINI_API_KEY: z.string(),
         CLERK_SECRET_KEY: z.string(),
     },
 
@@ -28,9 +28,9 @@ export const env = createEnv({
      * middlewares) or client-side so we need to destruct manually.
      */
     runtimeEnv: {
-        POSTGRES_URL: process.env.POSTGRES_URL,
+        DATABASE_URL: process.env.DATABASE_URL,
         NODE_ENV: process.env.NODE_ENV,
-        LLM_API_KEY: process.env.LLM_API_KEY,
+        GEMINI_API_KEY: process.env.GEMINI_API_KEY,
         NEXT_PUBLIC_ENV: process.env.NEXT_PUBLIC_ENV,
         NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
         CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY,
